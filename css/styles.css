@@ -1,0 +1,92 @@
+/* styles.css */
+
+/* Definiendo la paleta de colores */
+:root {
+    --dark-green: #17301C;
+    --dark-cyan: #379392; 
+    --moonstone: #4FB0C6;
+    --silver-lake-blue: #4F86C6;
+    --slate-blue: #744FC6;
+}
+
+body {
+    background-color: var(--moonstone);
+    color: var(--dark-green);
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    border-color: var(--slate-blue);
+    background-color: var(--silver-lake-blue);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    border-color: var(--dark-cyan);
+    box-shadow: 0 0 0 0.2rem rgba(55, 147, 146, 0.25);
+}
+
+.btn-primary {
+    background-color: var(--slate-blue);
+    border-color: var(--slate-blue);
+}
+
+.btn-primary:hover {
+    background-color: var(--dark-green);
+    border-color: var(--dark-green);
+}
+
+.card-footer {
+    background-color: var(--dark-cyan);
+}
+
+.card-footer a {
+    color: var(--dark-green);
+}
+
+.card, .form-control, .form-control::placeholder, .btn-primary {
+    color: #000000;
+}
+
+.input-field {
+    border: 2px solid #A9A9A9;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input-field:focus {
+    border-color: #6495ED;
+    box-shadow: 0 0 5px rgba(100, 149, 237, 0.3);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    height: 40px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+button.btn {
+    margin-top: 20px;
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+button.btn:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+.card-footer a:hover {
+    text-decoration: underline;
+}

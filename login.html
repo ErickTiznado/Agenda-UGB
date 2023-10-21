@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Agenda del Estudiante UGB</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-header text-center">Iniciar Sesión</div>
+                <div class="card-body">
+                    <form id="formLogin">
+                        <div class="form-group">
+                            <label for="correo">Correo Electrónico</label>
+                            <input type="email" id="correo" name="correo" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contraseña">Contraseña</label>
+                            <input type="password" id="contraseña" name="contraseña" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    ¿No tienes cuenta? <a href="/registro">Regístrate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById("formLogin").addEventListener("submit", function(event){
+        event.preventDefault(); // Evitar que el formulario se envíe de la manera predeterminada
+    
+        // Recopilar datos del formulario
+        const data = {
+            correo: document.getElementById("correo").value,
+            contraseña: document.getElementById("contraseña").value,
+        };
+    
+        // Usar fetch para enviar la solicitud POST al endpoint de inicio de sesión
+        fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())  // Convertir la respuesta en JSON
+        .then(data => {
+            if (data.success) {
+                console.log(data);
+
+                localStorage.setItem('userId', data.userId);
+                window.location.href = 'homeApp.html';
+                alert(data.success);  
+            } else if (data.error) {
+                alert(data.error);  
+            }
+        })
+        .catch(error => {
+            console.error('Hubo un problema con la operación fetch:', error);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horario de Trabajo - Agenda del Estudiante UGB</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/horariosClase.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Barra lateral para gestionar el horario de trabajo -->
+    <div id="sidebarMenu" class="collapse d-md-block">
+        <aside class="sidebar col-12 col-md-3 col-lg-2">
+            <h4>Agregar Bloques de Trabajo</h4>
+            <form id="addWorkBlockForm">
+                <div class="form-group form-field">
+                    <label for="dia" class="form-label">Día</label>
+                    <select id="dia" class="form-control form-dropdown">
+                        <option>Lunes</option>
+                        <option>Martes</option>
+                        <option>Miércoles</option>
+                        <option>Jueves</option>
+                        <option>Viernes</option>
+                        <option>Sabado</option>
+                        <option>Domingo</option>
+                    </select>
+                </div>
+                <div class="form-group form-field">
+                    <label for="inicio" class="form-label">Hora de Inicio</label>
+                    <input type="time" id="inicio" class="form-control form-input" required>
+                </div>
+                <div class="form-group form-field">
+                    <label for="fin" class="form-label">Hora de Fin</label>
+                    <input type="time" id="fin" class="form-control form-input" required>
+                </div>
+                <div class="form-group form-field">
+                    <label for="color" class="form-label">Color del Bloque</label>
+                    <select id="color" class="form-control">
+                        <option value="#FFB3BA" style="background-color: #FFB3BA;">#FFB3BA</option>
+                        <option value="#FFDFBA" style="background-color: #FFDFBA;">#FFDFBA</option>
+                        <option value="#FFFFBA" style="background-color: #FFFFBA;">#FFFFBA</option>
+                        <option value="#BAFFC9" style="background-color: #BAFFC9;">#BAFFC9</option>
+                        <option value="#BAE1FF" style="background-color: #BAE1FF;">#BAE1FF</option>
+                        <option value="#A1CAF1" style="background-color: #A1CAF1;">#A1CAF1</option>
+                        <option value="#B0E0E6" style="background-color: #B0E0E6;">#B0E0E6</option>
+                        <option value="#F0EAD6" style="background-color: #F0EAD6;">#F0EAD6</option>
+                        <option value="#E3A857" style="background-color: #E3A857;">#E3A857</option>
+                        <option value="#F4C2C2" style="background-color: #F4C2C2;">#F4C2C2</option>
+                        <option value="#FEFEFA" style="background-color: #FEFEFA;">#FEFEFA</option>
+                        <option value="#F0E68C" style="background-color: #F0E68C;">#F0E68C</option>
+                        <option value="#DEA5A4" style="background-color: #DEA5A4;">#DEA5A4</option>
+                        <option value="#B39EB5" style="background-color: #B39EB5;">#B39EB5</option>
+                        <option value="#FF6961" style="background-color: #FF6961;">#FF6961</option>
+                        <option value="#77DD77" style="background-color: #77DD77;">#77DD77</option>
+                        <option value="#C23B22" style="background-color: #C23B22;">#C23B22</option>
+                        <option value="#FFD1DC" style="background-color: #FFD1DC;">#FFD1DC</option>
+                        <option value="#D9D9D9" style="background-color: #D9D9D9;">#D9D9D9</option>
+                        <option value="#CFCFC4" style="background-color: #CFCFC4;">#CFCFC4</option>
+                    </select>
+                </div>
+                <button type="submit" id="guardar" class="btn button">Agregar Bloque de Trabajo</button>
+                <button type="button" id="btnSiguiente" class="btn button">Siguiente</button>
+                <button type="button" id="modifyBlockButton" class="btn btn-warning btn-md button" style="display: none;">Modificar Bloque</button>
+                <button type="button" id="deleteBlockButton" class="btn btn-danger btn-md button" style="display: none;">Eliminar Bloque</button>
+            </form>
+        </aside>
+    </div>
+
+    <!-- Tabla del horario de clases y trabajo -->
+    <div class="container mt-5">
+        <table id="workScheduleTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Horario</th>
+                    <th>Lunes</th>
+                    <th>Martes</th>
+                    <th>Miércoles</th>
+                    <th>Jueves</th>
+                    <th>Viernes</th>
+                    <th>Sábado</th>
+                    <th>Domingo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se generará dinámicamente el contenido de la tabla con las clases y bloques de trabajo -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        
+    </script>
+    <script src="js/trabajo.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

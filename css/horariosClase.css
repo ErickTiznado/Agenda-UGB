@@ -1,0 +1,102 @@
+:root {
+    /* Variables de la nueva paleta */
+    --dark-green: #17301C;
+    --dark-cyan: #379392;
+    --moonstone: #4FB0C6;
+    --silver-lake-blue: #4F86C6;
+    --slate-blue: #744FC6;
+
+    /* Variables originales */
+    --primary-color: var(--dark-green);
+    --secondary-color: var(--dark-cyan);
+    --bg-color: #f4f4f4;
+    --default-padding: 8px;
+    --default-margin: 8px;
+}
+
+.sidebar {
+    width: 250px;
+    height: auto;
+    max-height: 100%;
+    padding: 15px;
+    background-color: var(--silver-lake-blue);
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+}
+
+body {
+    padding-left: 175px;
+    font-family: Arial, sans-serif;
+    background-color: var(--moonstone);
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.form-field {
+    margin-bottom: var(--default-margin);
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+.form-input, .form-dropdown, .form-color-picker {
+    padding: var(--default-padding);
+    border: 1px solid var(--slate-blue);
+    border-radius: 4px;
+}
+
+button {
+    background-color: var(--silver-lake-blue);
+    color: #fff;
+    border: none;
+    padding: var(--default-padding);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: var(--slate-blue);
+}
+
+#btnSiguiente, #guardar, #modifyClassButton, #deleteClassButton {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#btnSiguiente, #guardar, #modifyClassButton, #deleteClassButton {
+    margin-bottom: 10px;
+}
+
+th, td{
+    border: 3px solid black !important;
+}
+
+#guardar{
+    background-color:  var(--slate-blue);
+}
+
+
+#btnSiguiente{
+    background-color:  var(--dark-cyan);
+}
+
+#guardar:hover {
+    background-color: var(--dark-green);
+    border-color: var(--dark-green);
+}
+
+#btnSiguiente:hover {
+    background-color: var(--dark-green);
+    border-color: var(--dark-green);
+}
