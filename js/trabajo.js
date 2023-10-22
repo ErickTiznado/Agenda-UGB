@@ -1,146 +1,139 @@
-function fillCellBasedOnDay(row, dia, nombre, sala, profesor, color, id, hora_inicio, hora_fin) {
-    let cellContent = `Materia: ${nombre}<br>Docente: ${profesor} (Aula: ${sala})`;
-    let diaIndex;
-    switch(dia) {
-        case 'Lunes': diaIndex = 1; break;
-        case 'Martes': diaIndex = 2; break;
-        case 'Miércoles': diaIndex = 3; break;
-        case 'Jueves': diaIndex = 4; break;
-        case 'Viernes': diaIndex = 5; break;
-        case 'Sabado': diaIndex = 6; break;
-        case 'Domingo': diaIndex = 7; break;
-    }
-
-    const cell = row.cells[diaIndex];
-    cell.innerHTML = cellContent;
-    cell.classList.add('class-block');
-    cell.setAttribute('data-day', dia);
-    cell.setAttribute('data-time', `${hora_inicio}-${hora_fin}`);
-    cell.style.backgroundColor = color;
-    cell.setAttribute('data-color', color);
-    cell.addEventListener('click', () => {
-        handleCellClick({ nombre, profesor, sala, dias: dia, hora_inicio, hora_fin, color, id }, cell);
-    });
+// Función para cargar los horarios
+function loadSchedules() {
+    console.log('loadSchedules iniciado');
+    // Aquí deberías obtener tus datos de clases y bloques de trabajo desde tu base de datos o API
+    const classes = [
+        // Ejemplo de datos de clases
+        {nombre: 'Matematicas', profesor: 'Steed', sala: 'Lab Cisco', día: 'Lunes', hora_inicio: '07:00:00', hora_fin: '08:30:00'},
+        // ... otros datos de clases
+    ];
+    const workBlocks = [
+        // Ejemplo de datos de bloques de trabajo
+        {ID: 1, día: 'Lunes', inicio: '08:40:00', fin: '20:00:00', color: '#A1CAF1'},
+        // ... otros datos de bloques de trabajo
+    ];
+    renderTable(classes, workBlocks);
 }
 
-
-function loadWorkBlocks() {
-    const usuario_id = localStorage.getItem('userId');
-
-    fetch(`http://localhost:3000/getWorkBlocks?usuario_id=${usuario_id}`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+// Función para renderizar la tabla
+function renderTable(classes, workBlocks) {
+    console.log('renderTable iniciado');
+    const timeBlocks = generateTimeBlocks(classes, workBlocks);
+    const table = document.getElementById('workScheduleTable');
+    const tbody = table.querySelector('tbody'); // Seleccionamos el tbody
+    timeBlocks.forEach((block, rowIndex) => {
+        const row = tbody.insertRow(rowIndex); // Insertamos las filas en el tbody
+        const timeCell = row.insertCell(0);
+        timeCell.innerText = `${block.startTime} - ${block.endTime}`;
+        for (let i = 1; i <= 7; i++) { // 7 días de la semana
+            row.insertCell(i).setAttribute('data-time', `${block.startTime}-${block.endTime}`);
         }
-        return response.json(); 
-    })
-    .then(data => {
-        const workTableBody = document.getElementById('workScheduleTable').getElementsByTagName('tbody')[0];
-        workTableBody.innerHTML = '';  // Limpiamos el contenido existente
-
-        data.forEach(block => {
-            const row = workTableBody.insertRow();
-            const cellDia = row.insertCell(0);
-            cellDia.textContent = block.dia;
-
-            const cellInicio = row.insertCell(1);
-            cellInicio.textContent = block.inicio;
-
-            const cellFin = row.insertCell(2);
-            cellFin.textContent = block.fin;
-
-            const cellColor = row.insertCell(3);
-            cellColor.style.backgroundColor = block.color;
-        });
-    })
-    .catch(error => {
-        console.error('Hubo un problema con la petición Fetch:', error);
     });
-}
 
-function loadWorkSchedule() {
-    const usuario_id = localStorage.getItem('userId');
- 
-     fetch(`http://localhost:3000/getClasses?usuario_id=${usuario_id}`)
-     .then(response => {
-         if (!response.ok) {
-             throw new Error('Network response was not ok');
-         }
-         return response.json(); 
-     })
-     .then(data => {
-         const scheduleTableBody = document.getElementById('workScheduleTable').getElementsByTagName('tbody')[0];
-         scheduleTableBody.innerHTML = '';  // Limpiamos el contenido existente
- 
-         const timeBlockMap = {};
- 
-         // Agrupar clases por bloque de tiempo
-         data.forEach(clase => {
-             const horarioFormateado = `${clase.hora_inicio} - ${clase.hora_fin}`;
-             if (!timeBlockMap[horarioFormateado]) {
-                 timeBlockMap[horarioFormateado] = [];
-             }
-             timeBlockMap[horarioFormateado].push(clase);
-         });
- 
-         Object.entries(timeBlockMap).forEach(([timeBlock, clases]) => {
-             const row = scheduleTableBody.insertRow();
-             const cellHorario = row.insertCell(0);
-             cellHorario.textContent = timeBlock;
- 
-             for (let i = 0; i < 7; i++) {
-                 row.insertCell(i + 1);
-             }
- 
-             clases.forEach(clase => {
-                 fillCellBasedOnDay(row, clase.dias, clase.nombre, clase.sala, clase.profesor, clase.color, clase.ID, clase.hora_inicio, clase.hora_fin);
-             });
-         });
-     })
-     .catch(error => {
-         console.error('Hubo un problema con la petición Fetch:', error);
-     });
- }
-
-document.getElementById('addWorkBlockForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    // Capturar la información del formulario
-    const dia = document.getElementById('dia').value;
-    const inicio = document.getElementById('inicio').value;
-    const fin = document.getElementById('fin').value;
-    const color = document.getElementById('color').value;
-    const usuario_id = localStorage.getItem('userId');
-
-    // Objeto con la información del bloque de trabajo
-    const workBlockData = {
-        usuario_id,
-        dia,
-        inicio,
-        fin,
-        color
-    };
-
-    // Enviar la información al servidor
-    fetch('http://localhost:3000/agregarBloqueTrabajo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(workBlockData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Bloque de trabajo agregado exitosamente!');
-            loadSchedule();  // Actualizar la vista
+    classes.forEach(clase => {
+        const cell = findCellForClass(clase, timeBlocks);
+        if (cell) {
+            cell.style.backgroundColor = '#A1CAF1';
+            cell.innerHTML = `<strong>${clase.nombre}</strong><br>${clase.profesor}<br>${clase.sala}`;
         } else {
-            alert('Error: ' + data.error);
+            console.log('Celda no encontrada para clase:', clase);
         }
-    })
-    .catch(error => {
-        console.error('Hubo un problema con la petición Fetch:', error);
     });
-});
 
+    workBlocks.forEach(block => {
+        const cell = findCellForWorkBlock(block, timeBlocks);
+        if (cell) {
+            cell.style.backgroundColor = block.color;
+        } else {
+            console.log('Celda NO encontrada para bloque de trabajo:', block);
+        }
+    });
+}
 
-window.onload = loadWorkSchedule;
-window.onload = loadWorkBlocks;
+// Función para generar bloques de tiempo
+// Función para generar bloques de tiempo
+function generateTimeBlocks(classes, workBlocks) {
+    console.log('generateTimeBlocks iniciado');
+    let timeBlocks = [];
+    // Aquí deberías generar tus bloques de tiempo basándote en tus clases y bloques de trabajo
+    // Por ejemplo:
+    classes.forEach(clase => {
+        timeBlocks.push({startTime: clase.hora_inicio, endTime: clase.hora_fin});
+    });
+    workBlocks.forEach(block => {
+        timeBlocks.push({startTime: block.inicio, endTime: block.fin});
+    });
+    // Ordenar y filtrar bloques de tiempo únicos
+    timeBlocks = timeBlocks.sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+
+    // Eliminar bloques de tiempo solapados y fusionarlos en un solo bloque
+    for (let i = 0; i < timeBlocks.length - 1; i++) {
+        if (timeBlocks[i].endTime > timeBlocks[i + 1].startTime) {
+            timeBlocks[i].endTime = timeBlocks[i + 1].endTime;
+            timeBlocks.splice(i + 1, 1);
+            i--; // Retroceder el índice para revisar nuevamente
+        }
+    }
+    console.log('Bloques de tiempo generados:', timeBlocks);
+    return timeBlocks;
+}
+
+// Función para encontrar la celda para una clase
+function findCellForClass(clase, timeBlocks) {
+    console.log('Buscando celda para clase:', clase);
+    const dayColumn = getDayColumn(clase.día);
+    for (let i = 0; i < timeBlocks.length; i++) {
+        const block = timeBlocks[i];
+        if (clase.hora_inicio >= block.startTime && clase.hora_inicio < block.endTime) {
+            const row = i + 1; // +1 porque la primera fila es el encabezado
+            const table = document.getElementById('workScheduleTable');
+            if (table.rows[row] && table.rows[row].cells[dayColumn]) {
+                console.log('Celda encontrada para clase:', clase);
+                return table.rows[row].cells[dayColumn];
+            }
+        }
+    }
+    console.log('Celda NO encontrada para clase:', clase);
+    return null;
+}
+
+// Función para encontrar la celda para un bloque de trabajo
+function findCellForWorkBlock(workBlock, timeBlocks) {
+    console.log('Buscando celda para bloque de trabajo:', workBlock);
+    const dayColumn = getDayColumn(workBlock.día);
+    for (let i = 0; i < timeBlocks.length; i++) {
+        const block = timeBlocks[i];
+        if (workBlock.inicio >= block.startTime && workBlock.inicio < block.endTime) {
+            const row = i + 1; // +1 porque la primera fila es el encabezado
+            const table = document.getElementById('workScheduleTable');
+            if (table.rows[row] && table.rows[row].cells[dayColumn]) {
+                console.log('Celda encontrada para bloque de trabajo:', workBlock);
+                return table.rows[row].cells[dayColumn];
+            }
+        }
+    }
+    console.log('Celda NO encontrada para bloque de trabajo:', workBlock);
+    return null;
+}
+
+// Función para obtener la columna del día
+function getDayColumn(day) {
+    const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+    return days.indexOf(day) + 1; // +1 porque la primera columna es el horario
+}
+
+// Función para convertir tiempo a minutos
+function timeToMinutes(time) {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+}
+
+// Función para convertir minutos a tiempo
+function minutesToTime(minutes) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:00`;
+}
+
+// Puedes llamar a loadSchedules() para iniciar el proceso
+loadSchedules();
